@@ -1,0 +1,10 @@
+external power(int base, int power)
+result 'first' is 2*5
+result "second" is 095+333
+result 'third' is 4/2
+result 'bobby' is 22-19
+result 'nice' is 2/2
+result "helloWorld3" is 100*2
+result "dolla dolla dolla" is 33+36
+result "xx" is power(1,2)
+result "binding" is let x = 2*5 in let x=80 in x-1 end * x end

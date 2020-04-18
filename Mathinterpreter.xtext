@@ -1,0 +1,52 @@
+grammar sdu.mdsd.Mathinterpreter with org.eclipse.xtext.common.Terminals
+
+generate mathinterpreter "http://www.mdsd.sdu/Mathinterpreter"
+
+Math:
+	externals+=ExternalDecl*
+	expressions+=MathExp+
+;
+
+ExternalDecl:
+	'external' name=ID '(' arguments+=ExternalArguments (',' arguments+=ExternalArguments)* ')'
+;
+
+ExternalArguments:
+	type=ID name=ID
+;
+
+ExternalCall:
+	method=[ExternalDecl] '(' args+=Exp (',' args+=Exp)* ')'
+;
+
+MathExp:
+	'result' name=STRING 'is' exp=Exp
+;
+
+Exp returns Expression:
+	ExternalCall | Factor (('+' {Plus.left=current} | '-' {Minus.left=current}) right=Factor)*
+;
+
+Factor returns Expression:
+	Primary (('*' {Mult.left=current} | '/' {Div.left=current}) right=Primary)*
+;
+
+Variable returns Expression:
+{Variable} name=ID;
+
+VariableBinding returns Expression:
+{Let} 'let' name=ID '=' binding=Exp 'in' body=Exp 'end'
+;
+
+Primary returns Expression:
+	Number | Parenthesis | Variable | VariableBinding
+;
+
+Parenthesis returns Expression:
+	'(' Exp ')'
+;
+
+Number returns Expression:
+	{Number} value=INT
+;
+
